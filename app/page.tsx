@@ -94,8 +94,8 @@ export default function Home() {
                                     </span>
                                     <span>Empresa</span>
                                 </div>
-                                <div className="grid grid-cols-2 items-center gap-4">
-                                    <div className="mt-3 flex justify-end mr-2">
+                                <div className="grid grid-cols-[auto,1fr] items-center gap-2">
+                                    <div className="mt-3 flex mr-2 ">
                                         <img src={empresa.logo} alt="logo" className="w-10 h-10 rounded-full border-2 border-gray-300" />
                                     </div>
                                     <div className="text-gray-700 mt-2">{empresa.name}</div>
