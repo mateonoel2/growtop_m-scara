@@ -14,8 +14,7 @@ const handler = NextAuth({
     callbacks: {
       async session({ session, user }) {
         session.user.id = user.id;
-        session.user.role = user.role;
-        session.user.image = user.image || "";
+        session.user.email = user.email;
   
         return session;
       },
