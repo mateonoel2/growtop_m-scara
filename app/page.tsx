@@ -8,10 +8,10 @@ export default function Home() {
     const [user, setUser] = useState<any>(null);
     const [empresa, setEmpresa] = useState<any>(null);
     const [tasks, setTasks] = useState([
-        { id: 1, text: 'Prueba 1', completed: false },
-        { id: 2, text: 'Prueba 2', completed: false },
-        { id: 3, text: 'Prueba 3', completed: false },
-        { id: 4, text: 'Sesión en vivo', completed: false },
+        { id: 0, text: 'Prueba 1', completed: false },
+        { id: 1, text: 'Prueba 2', completed: false },
+        { id: 2, text: 'Prueba 3', completed: false },
+        { id: 3, text: 'Sesión en vivo', completed: false },
     ]);
 
 
@@ -40,15 +40,38 @@ export default function Home() {
     useEffect(() => {
         if (user) {
             fetchEmpresaData();
+            setTasks(tasks.map(task => {
+                if (user && user.links_status[task.id] === "completed") {
+                    return { ...task, completed: true };
+                }
+                return task;
+            }));
         }
     }, [user]);
 
+    const changeTaskStatus = async (id: number) => {
+        if (session && session.user && 'id' in session.user) {
+            const response = await fetch(`/api/users/${session.user.id}/tasks`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id }),
+            });
+            const data = await response.json();
+            setUser(data);
+        }
+    }
+
+
     const handleCheckboxChange = (id: number) => {
-        setTasks(prevTasks =>
-            prevTasks.map(task =>
-                task.id === id ? { ...task, completed: !task.completed } : task
-            )
-        );
+        changeTaskStatus(id);
+        setTasks(tasks.map(task => {
+            if (task.id === id) {
+                return { ...task, completed: !task.completed };
+            }
+            return task;
+        }));
     };
 
     return (
@@ -75,7 +98,7 @@ export default function Home() {
 
             )}
             {session?.user && user && empresa && (
-                <div className="container mx-auto my-5 p-5">
+                <div className="container mx-auto my-5">
                     <div className="md:flex no-wrap md:-mx-2 ">
                         <div className="w-full md:w-3/12 md:mx-2">
                             <div className="bg-white p-3 border-t-4 border-green-400">
@@ -166,7 +189,7 @@ export default function Home() {
                                 <div className="text-gray-700">
                                     <div className="text-gray-700">
 
-                                        {user.links_status[0] === "pending" && (
+                                        {user.links_status[0] === "pending" ? (
                                             <div className="mt-5 mb-5" >
                                                 <h4 className="text-gray-700 font-semibold text-lg">Prueba 1: Estilos de aprendizaje</h4>
                                                 <p className="mb-2"><span className="font-bold">Instrucciones:</span> Ingresa al link del test y complétalo con todos los datos que se requieren, no hay tiempo límite, recuerda que no hay respuesta buena o mala.</p>
@@ -175,10 +198,16 @@ export default function Home() {
                                                 </p>
                                                 <p className="mb-2"> <span className="font-bold">Nombre de usuario:</span>Regístrate con tus nombres, apellidos y correo en la plataforma.</p>
                                                 <p className="mb-2"><span className="font-bold">Código:</span> {empresa.codigo}</p>
-                                            </div>)
+                                            </div>) : (
+                                                <div className="mt-5 mb-5" >
+                                                    <h4 className="text-gray-700 font-semibold text-lg">Prueba 1: Estilos de aprendizaje</h4>
+                                                    <span className="ml-auto"><span
+                                            className="bg-green-500 py-1 px-2 rounded text-white text-sm">Completado</span></span>
+                                                </div>
+                                            )
                                         }
 
-                                        {user.links_status[1] === "pending" && (
+                                        {user.links_status[1] === "pending" ? (
                                             <div className="mt-5 mb-5" >
                                                 <h4 className="text-gray-700 font-semibold text-lg">Prueba 2: Assessment de competencia</h4>
                                                 <p className="mb-2"><span className="font-bold">Instrucciones:</span> Te llegará un correo de bienvenida directamente de la plataforma LEIRO ASSESSMENTS con un link, tu correo y una contraseña para ingresar directamente a una plataforma con una imagen como la de arriba.</p>
@@ -186,10 +215,16 @@ export default function Home() {
                                                     <span className="font-bold">Link:</span>  <a href={user.links[1]} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{user.links[1]}</a>
                                                 </p>
                                                 <p className="mb-2"> <span className="font-bold">Nombre de usuario: </span>CORREO ELECTRÓNICO al que te llegó esta comunicación y la contraseña la podrás encontrar en el correo de “PRUEBA APL”</p>
-                                            </div>)
+                                            </div>) : (
+                                                <div className="mt-5 mb-5" >
+                                                <h4 className="text-gray-700 font-semibold text-lg">Prueba 2: Assessment de competencia</h4>
+                                                <span className="ml-auto"><span
+                                        className="bg-green-500 py-1 px-2 rounded text-white text-sm">Completado</span></span>
+                                            </div>
+                                            )
                                         }
 
-                                        {user.links_status[2] === "pending" && (
+                                        {user.links_status[2] === "pending" ? (
                                             <div className="mt-5 mb-5" >
                                                 <h4 className="text-gray-700 font-semibold text-lg">Prueba 3: Test de competencias transversales</h4>
                                                 <p className="mb-2"><span className="font-bold">Instrucciones:</span> Ingresa al link a continuación para acceder al sitio. La primera vez que inicie sesión en el sitio, deberá registrarse con nombres, apellidos y correo. Recuerda no cerrar el explorador cuando estés realizando la evaluación para evitar el cierre del sistema. </p>
@@ -197,10 +232,16 @@ export default function Home() {
                                                     <span className="font-bold">Link:</span>  <a href={user.links[2]} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{user.links[2]}</a>
                                                 </p>
                                                 <p className="mb-2"> <span className="font-bold">Nombre de usuario: </span>Regístrate con tus nombres, apellidos y correo en la plataforma.</p>
-                                            </div>)
+                                            </div>) : (
+                                                <div className="mt-5 mb-5" >
+                                                <h4 className="text-gray-700 font-semibold text-lg">Prueba 3: Test de competencias transversales</h4>
+                                                <span className="ml-auto"><span
+                                        className="bg-green-500 py-1 px-2 rounded text-white text-sm">Completado</span></span>
+                                            </div>
+                                            )
                                         }
 
-                                        {user.links_status[3] === "pending" && (
+                                        {user.links_status[3] === "pending" ? (
                                             <div className="mt-5 mb-5" >
                                                 <h4 className="text-gray-700 font-semibold text-lg">Sesión en vivo: Dinámica de Assesment individual</h4>
                                                 <p className="mb-2"><span className="font-bold">Instrucciones:</span> Ingresa al link de CALENDLY y agenda tu sesión con un especialista de Growtop de acuerdo con los horarios disponibles para pasar esta evaluación a través de Microsoft Teams. Recuerda que la sesión individual dura una 1 hora y 30 minutos. Las indicaciones del reto que debes cumplir las conocerás durante la sesión, recuerda estar puntual en la sesión.</p>
@@ -208,7 +249,13 @@ export default function Home() {
                                                     <span className="font-bold">Link:</span>  <a href={user.links[2]} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{user.links[2]}</a>
                                                 </p>
                                                 <p className="mb-2"> <span className="font-bold">Nombre de usuario: </span>Regístrate con tus nombres, apellidos y correo en la plataforma.</p>
-                                            </div>)
+                                            </div>) : (
+                                                <div className="mt-5 mb-5" >
+                                                <h4 className="text-gray-700 font-semibold text-lg">Sesión en vivo: Dinámica de Assesment individual</h4>
+                                                <span className="ml-auto"><span
+                                        className="bg-green-500 py-1 px-2 rounded text-white text-sm">Completado</span></span>
+                                            </div>
+                                            )
                                         }
 
                                     </div>
