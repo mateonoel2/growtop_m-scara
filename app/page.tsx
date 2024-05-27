@@ -185,6 +185,7 @@ export default function Home() {
                                     </span>
                                     <span className="tracking-wide">Tareas Completadas</span>
                                 </div>
+                                <p className='text-red-400'> No olvides marcar cuando termines con una de las tareas</p>
                                 <div className="text-gray-700">
                                     <div className="pt-4 pl-2">
                                         <ul>
@@ -207,7 +208,7 @@ export default function Home() {
                             </div>
                         </div>
 
-                        <div className="w-full md:w-9/12 mx-2 h-64">
+                        <div className="w-full md:w-9/12 mx-2">
 
                             <div className="bg-white p-3 shadow-sm rounded-sm">
                                 <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
