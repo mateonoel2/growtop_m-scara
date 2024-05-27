@@ -1,9 +1,11 @@
 "use client";
 
-import { signIn, useSession } from 'next-auth/react';
+import Task from '@/components/Task';
+import { useSession, signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
+    const [email, setEmail] = useState('');
     const { data: session } = useSession();
     const [user, setUser] = useState<any>(null);
     const [empresa, setEmpresa] = useState<any>(null);
@@ -13,7 +15,6 @@ export default function Home() {
         { id: 2, text: 'Prueba 3', completed: false },
         { id: 3, text: 'Sesión en vivo', completed: false },
     ]);
-
 
     const fetchUserData = async () => {
         if (session && session.user && 'id' in session.user) {
@@ -74,31 +75,40 @@ export default function Home() {
         }));
     };
 
+    const calculateCompletedPercentage = () => {
+        const completedTasks = tasks.filter(task => task.completed).length;
+        return (completedTasks / tasks.length) * 100;
+    };
+
     return (
         <>
             {!session && (
-                <div className="mx-auto max-w-60 bg-white p-3 border-t-4 border-green-400 rounded">
+                <div className="mx-auto max-w-60 bg-white p-7 border-t-4 border-green-400 rounded">
                     <div className="mx-auto space-y-8 w-40">
-                        <div>
-                            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Ingresar</h2>
-                        </div>
-                        <div>
+
+                        <form
+                            action={async () => {
+                                await signIn("email", { email })
+                            }}
+                        >
+
+                            <input className='rounded flex p mb-4 text-black p-1' type='email' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='email' required></input>
+
                             <button
-                                type="button"
+                                type="submit"
                                 className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-                                onClick={() => {
-                                    signIn()
-                                }}
+
                             >
-                                Sign in
+                                Iniciar Sesión
                             </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
 
             )}
             {session?.user && user && empresa && (
-                <div className="container mx-auto my-5">
+                <div className="container mx-auto mb-5">
+                    <p className='p-5'> ¡Hola! Esperamos estés muy bien, desde Growtop te damos la bienvenida a la Experiencia de evaluación de Growtop en sinergia MAF Todo este proceso se compone de algunas 3 pruebas virtuales y 1 dinámica en vivo que deberás ir cumpliendo con el fin de poner a prueba todo tu potencial y competencias para así avanzar en la experiencia etapa tras etapa.</p>
                     <div className="md:flex no-wrap md:-mx-2 ">
                         <div className="w-full md:w-3/12 md:mx-2">
                             <div className="bg-white p-3 border-t-4 border-green-400">
@@ -187,84 +197,56 @@ export default function Home() {
                                     <span className="tracking-wide">Tareas Pendientes</span>
                                 </div>
                                 <div className="text-gray-700">
-                                    <div className="text-gray-700">
 
-                                        {user.links_status[0] === "pending" ? (
-                                            <div className="mt-5 mb-5" >
-                                                <h4 className="text-gray-700 font-semibold text-lg">Prueba 1: Estilos de aprendizaje</h4>
-                                                <p className="mb-2"><span className="font-bold">Instrucciones:</span> Ingresa al link del test y complétalo con todos los datos que se requieren, no hay tiempo límite, recuerda que no hay respuesta buena o mala.</p>
-                                                <p className="mb-2">
-                                                    <span className="font-bold">Link:</span>  <a href={user.links[0]} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{user.links[0]}</a>
-                                                </p>
-                                                <p className="mb-2"> <span className="font-bold">Nombre de usuario:</span>Regístrate con tus nombres, apellidos y correo en la plataforma.</p>
-                                                <p className="mb-2"><span className="font-bold">Código:</span> {empresa.codigo}</p>
-                                            </div>) : (
-                                                <div className="mt-5 mb-5" >
-                                                    <h4 className="text-gray-700 font-semibold text-lg">Prueba 1: Estilos de aprendizaje</h4>
-                                                    <span className="ml-auto"><span
-                                            className="bg-green-500 py-1 px-2 rounded text-white text-sm">Completado</span></span>
-                                                </div>
-                                            )
-                                        }
-
-                                        {user.links_status[1] === "pending" ? (
-                                            <div className="mt-5 mb-5" >
-                                                <h4 className="text-gray-700 font-semibold text-lg">Prueba 2: Assessment de competencia</h4>
-                                                <p className="mb-2"><span className="font-bold">Instrucciones:</span> Te llegará un correo de bienvenida directamente de la plataforma LEIRO ASSESSMENTS con un link, tu correo y una contraseña para ingresar directamente a una plataforma con una imagen como la de arriba.</p>
-                                                <p className="mb-2">
-                                                    <span className="font-bold">Link:</span>  <a href={user.links[1]} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{user.links[1]}</a>
-                                                </p>
-                                                <p className="mb-2"> <span className="font-bold">Nombre de usuario: </span>CORREO ELECTRÓNICO al que te llegó esta comunicación y la contraseña la podrás encontrar en el correo de “PRUEBA APL”</p>
-                                            </div>) : (
-                                                <div className="mt-5 mb-5" >
-                                                <h4 className="text-gray-700 font-semibold text-lg">Prueba 2: Assessment de competencia</h4>
-                                                <span className="ml-auto"><span
-                                        className="bg-green-500 py-1 px-2 rounded text-white text-sm">Completado</span></span>
-                                            </div>
-                                            )
-                                        }
-
-                                        {user.links_status[2] === "pending" ? (
-                                            <div className="mt-5 mb-5" >
-                                                <h4 className="text-gray-700 font-semibold text-lg">Prueba 3: Test de competencias transversales</h4>
-                                                <p className="mb-2"><span className="font-bold">Instrucciones:</span> Ingresa al link a continuación para acceder al sitio. La primera vez que inicie sesión en el sitio, deberá registrarse con nombres, apellidos y correo. Recuerda no cerrar el explorador cuando estés realizando la evaluación para evitar el cierre del sistema. </p>
-                                                <p className="mb-2">
-                                                    <span className="font-bold">Link:</span>  <a href={user.links[2]} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{user.links[2]}</a>
-                                                </p>
-                                                <p className="mb-2"> <span className="font-bold">Nombre de usuario: </span>Regístrate con tus nombres, apellidos y correo en la plataforma.</p>
-                                            </div>) : (
-                                                <div className="mt-5 mb-5" >
-                                                <h4 className="text-gray-700 font-semibold text-lg">Prueba 3: Test de competencias transversales</h4>
-                                                <span className="ml-auto"><span
-                                        className="bg-green-500 py-1 px-2 rounded text-white text-sm">Completado</span></span>
-                                            </div>
-                                            )
-                                        }
-
-                                        {user.links_status[3] === "pending" ? (
-                                            <div className="mt-5 mb-5" >
-                                                <h4 className="text-gray-700 font-semibold text-lg">Sesión en vivo: Dinámica de Assesment individual</h4>
-                                                <p className="mb-2"><span className="font-bold">Instrucciones:</span> Ingresa al link de CALENDLY y agenda tu sesión con un especialista de Growtop de acuerdo con los horarios disponibles para pasar esta evaluación a través de Microsoft Teams. Recuerda que la sesión individual dura una 1 hora y 30 minutos. Las indicaciones del reto que debes cumplir las conocerás durante la sesión, recuerda estar puntual en la sesión.</p>
-                                                <p className="mb-2">
-                                                    <span className="font-bold">Link:</span>  <a href={user.links[2]} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">{user.links[2]}</a>
-                                                </p>
-                                                <p className="mb-2"> <span className="font-bold">Nombre de usuario: </span>Regístrate con tus nombres, apellidos y correo en la plataforma.</p>
-                                            </div>) : (
-                                                <div className="mt-5 mb-5" >
-                                                <h4 className="text-gray-700 font-semibold text-lg">Sesión en vivo: Dinámica de Assesment individual</h4>
-                                                <span className="ml-auto"><span
-                                        className="bg-green-500 py-1 px-2 rounded text-white text-sm">Completado</span></span>
-                                            </div>
-                                            )
-                                        }
-
+                                    <div className="w-full bg-gray-200 rounded-full h-6 mb-4 mt-4">
+                                        <div className="bg-green-400 h-6 rounded-full"
+                                            style={{ width: `${calculateCompletedPercentage()}%` }}
+                                        ></div>
                                     </div>
 
+                                    <Task
+                                        link_status={user.links_status[0]}
+                                        instrucciones={"Ingresa al link del test y complétalo con todos los datos que se requieren, no hay tiempo límite, recuerda que no hay respuesta buena o mala."}
+                                        link={user.links[0]}
+                                        nombre_usuario={"Regístrate con tus nombres, apellidos y correo en la plataforma."}
+                                        codigo={empresa.codigo}
+                                        titulo={"Prueba 1: Estilos de aprendizaje"}
+                                    />
+
+                                    <Task
+                                        link_status={user.links_status[1]}
+                                        instrucciones={"Te llegará un correo de bienvenida directamente de la plataforma LEIRO ASSESSMENTS con un link, tu correo y una contraseña para ingresar directamente a una plataforma con una imagen como la de arriba."}
+                                        link={user.links[1]}
+                                        nombre_usuario={"CORREO ELECTRÓNICO al que te llegó esta comunicación y la contraseña la podrás encontrar en el correo de “PRUEBA APL”"}
+                                        codigo={""}
+                                        titulo={"Prueba 2: Assessment de competencia"}
+                                    />
+
+                                    <Task
+                                        link_status={user.links_status[2]}
+                                        instrucciones={"Ingresa al link a continuación para acceder al sitio. La primera vez que inicie sesión en el sitio, deberá registrarse con nombres, apellidos y correo. Recuerda no cerrar el explorador cuando estés realizando la evaluación para evitar el cierre del sistema."}
+                                        link={user.links[2]}
+                                        nombre_usuario={"Regístrate con tus nombres, apellidos y correo en la plataforma."}
+                                        codigo={""}
+                                        titulo={"Prueba 3: Test de competencias transversales"}
+                                    />
+
+                                    <Task
+                                        link_status={user.links_status[3]}
+                                        instrucciones={"Ingresa al link de CALENDLY y agenda tu sesión con un especialista de Growtop de acuerdo con los horarios disponibles para pasar esta evaluación a través de Microsoft Teams. Recuerda que la sesión individual dura una 1 hora y 30 minutos. Las indicaciones del reto que debes cumplir las conocerás durante la sesión, recuerda estar puntual en la sesión."}
+                                        link={user.links[3]}
+                                        nombre_usuario={"Regístrate con tus nombres, apellidos y correo en la plataforma."}
+                                        codigo={""}
+                                        titulo={"Sesión en vivo: Dinámica de Assesment individual"}
+                                    />
+
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
+
             )}
         </>
     );

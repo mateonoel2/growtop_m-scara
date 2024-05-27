@@ -2,13 +2,20 @@ import NextAuth from 'next-auth';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from "@/utils/mongodb"
 import EmailProvider from "next-auth/providers/email"
+import { MyVerificationRequest } from '@/myVerificationRequest';
 
-const handler = NextAuth({
+ const handler = NextAuth({
     adapter: MongoDBAdapter(clientPromise),
     providers: [
         EmailProvider({
+            id: 'email',
+            name: 'email',
             server: process.env.EMAIL_SERVER,
             from: process.env.EMAIL_FROM,
+            sendVerificationRequest({identifier, url, provider,
+            }) {
+              MyVerificationRequest({identifier, url, provider})
+            },
           }),
     ],
     callbacks: {
