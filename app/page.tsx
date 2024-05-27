@@ -9,6 +9,8 @@ export default function Home() {
     const { data: session } = useSession();
     const [user, setUser] = useState<any>(null);
     const [empresa, setEmpresa] = useState<any>(null);
+    const [showPopup, setShowPopup] = useState(false);
+
     const [tasks, setTasks] = useState([
         { id: 0, text: 'Prueba 1', completed: false },
         { id: 1, text: 'Prueba 2', completed: false },
@@ -80,30 +82,48 @@ export default function Home() {
         return (completedTasks / tasks.length) * 100;
     };
 
+
+
     return (
         <>
             {!session && (
-                <div className="mx-auto max-w-60 bg-white p-7 border-t-4 border-green-400 rounded">
-                    <div className="mx-auto space-y-8 w-40">
-
+                <div className="mx-auto max-w-lg bg-white p-7 border-t-4 border-green-400 rounded">
+                    <div className="mx-auto space-y-8 w-full max-w-md">
                         <form
                             action={async () => {
-                                await signIn("email", { email })
+                                await signIn("email", { email, redirect: false })
+                                    .then((value) => {
+                                        if (value && value.ok) {
+                                            setShowPopup(true);
+                                        }
+                                    })
                             }}
                         >
-
-                            <input className='rounded flex p mb-4 text-black p-1' type='email' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='email' required></input>
-
+                            <input
+                                className="rounded mb-4 text-black p-2 w-full border"
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="email"
+                                required
+                            />
                             <button
                                 type="submit"
-                                className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                                 Iniciar Sesión
                             </button>
                         </form>
+                        {showPopup && (
+                            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                                <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full text-center">
+                                    <p className="mb-4 text-black">Por favor, confirme el correo de verificación que se le ha enviado.</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
+
 
             )}
             {session?.user && user && empresa && (
