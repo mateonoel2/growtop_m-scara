@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-
 const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo} ) => {
     const [isDetailsVisible, setIsDetailsVisible] = useState(true);
 
@@ -10,10 +9,6 @@ const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo}
         setIsDetailsVisible(!isDetailsVisible);
     };
 
-    // Prueba 1: Estilos de aprendizaje 
-    // Ingresa al link del test y complétalo con todos los datos que se requieren, no hay tiempo límite, recuerda que no hay respuesta buena o mala.
-    // Regístrate con tus nombres, apellidos y correo en la plataforma.
-    // {empresa.codigo}
   return (
     <>
     {link_status === "pending" ? (

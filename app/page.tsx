@@ -171,10 +171,12 @@ export default function Home() {
                             </div>
 
 
-                            <div className="my-4"></div>
+                        </div>
 
+                        <div className="w-full md:w-9/12 mx-2">
 
                             <div className="bg-white p-3 shadow-sm rounded-sm">
+
                                 <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3">
                                     <span className="text-green-500">
                                         <svg className="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -184,31 +186,39 @@ export default function Home() {
                                         </svg>
                                     </span>
                                     <span className="tracking-wide">Tareas Completadas</span>
+                                    <div className="flex flex-grow bg-gray-200 rounded-full h-6 mb-4 mt-4">
+                                        <div className="bg-green-400 h-6 rounded-full"
+                                            style={{ width: `${calculateCompletedPercentage()}%` }}
+                                        ></div>
+                                    </div>
                                 </div>
-                                <p className='text-red-400'> No olvides marcar cuando termines con una de las tareas</p>
                                 <div className="text-gray-700">
-                                    <div className="pt-4 pl-2">
-                                        <ul>
+                                    <div className="pl-2">
+                                        <div className="flex flex-wrap">
                                             {tasks.map(task => (
-                                                <li key={task.id} className="flex items-center mb-2">
+                                                <button
+                                                    key={task.id}
+                                                    onClick={() => handleCheckboxChange(task.id)}
+                                                    className={`flex items-center mb-2 mr-2 px-3 py-2 rounded-md border border-gray-300 bg-white ${task.completed ? 'line-through' : ''
+                                                        }`}
+                                                >
                                                     <input
                                                         type="checkbox"
                                                         checked={task.completed}
                                                         onChange={() => handleCheckboxChange(task.id)}
-                                                        className="mr-2"
+                                                        className="mr-2 cursor-pointer"
                                                     />
-                                                    <span className={task.completed ? 'line-through' : ''}>
-                                                        {task.text}
-                                                    </span>
-                                                </li>
+                                                    <span>{task.text}</span>
+                                                </button>
                                             ))}
-                                        </ul>
+                                        </div>
+
                                     </div>
+                                    <p className='text-red-400'> No olvides marcar cuando termines con una de las tareas</p>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="w-full md:w-9/12 mx-2">
+                            <div className="my-4"></div>
 
                             <div className="bg-white p-3 shadow-sm rounded-sm">
                                 <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
@@ -219,11 +229,6 @@ export default function Home() {
                                 </div>
                                 <div className="text-gray-700">
 
-                                    <div className="w-full bg-gray-200 rounded-full h-6 mb-4 mt-4">
-                                        <div className="bg-green-400 h-6 rounded-full"
-                                            style={{ width: `${calculateCompletedPercentage()}%` }}
-                                        ></div>
-                                    </div>
 
                                     <Task
                                         link_status={user.links_status[0]}
@@ -240,7 +245,7 @@ export default function Home() {
                                         link={user.links[1]}
                                         nombre_usuario={"CORREO ELECTRÓNICO al que te llegó esta comunicación y la contraseña la podrás encontrar en el correo de “PRUEBA APL”"}
                                         codigo={""}
-                                        titulo={"Prueba 2: Assessment de competencia"}
+                                        titulo={"Prueba 2: Assessment de liderazgo"}
                                     />
 
                                     <Task
