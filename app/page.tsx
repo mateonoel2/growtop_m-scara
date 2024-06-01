@@ -170,6 +170,24 @@ export default function Home() {
                                 </div>
                             </div>
 
+                            <div className="my-4"></div>
+                            <div className="bg-white p-3 hover:shadow rounded-sm">
+                                <div className="flex items-center space-x-3 font-semibold text-gray-900 text-xl leading-8">
+                                    <span className="text-green-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle>
+                                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                    </span>
+                                    <span>¿Necesitas Ayuda?</span>
+                                </div>
+                                
+                                <div className="text-gray-700 mt-2">
+                                    <p className="text-gray-700">Si tienes alguna duda o necesitas ayuda con el proceso, no dudes en contactar a tu especialista de Growtop:</p>
+                                    <div className="mt-2">
+                                        <a href="diegoc@growtop.pe" className="text-blue-500 hover:text-blue-600">diegoc@growtop.pe</a>
+                                    </div>
+                                </div>
+                            </div>
+
 
                         </div>
 
