@@ -30,9 +30,10 @@ const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo}
                   <p className="mb-2">
                       <span className="font-bold">Nombre de usuario:</span> {nombre_usuario}
                   </p>
+                  {codigo && (
                   <p className="mb-2">
                       <span className="font-bold">Código:</span> {codigo}
-                  </p>
+                  </p>)}
               </div>
           )}
       </div>) : (
