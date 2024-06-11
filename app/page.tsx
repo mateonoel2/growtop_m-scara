@@ -128,7 +128,7 @@ export default function Home() {
             )}
             {session?.user && user && empresa && (
                 <div className="container mx-auto mb-5">
-                    <p className='p-5'> ¡Hola! Esperamos estés muy bien, desde Growtop te damos la bienvenida a la Experiencia de evaluación de Growtop en sinergia con {empresa.name}. Todo este proceso se compone de algunas 3 pruebas virtuales y 1 dinámica en vivo que deberás ir cumpliendo con el fin de poner a prueba todo tu potencial y competencias para así avanzar en la experiencia etapa tras etapa.</p>
+                    <p className='p-5'> ¡Hola! Te damos la bienvenida a la Experiencia de evaluación de Growtop. Este proceso se compone de 4 pruebas: 3 test que puedes realizar desde cualquier dispositivo y 1 sesión en vivo que debes agendar desde el link que está debajo para cumplir con los 4 indicadores y poner a prueba todo tu potencial. ¡Muchos éxitos! </p>
                     <div className="md:flex no-wrap md:-mx-2 ">
                         <div className="w-full md:w-3/12 md:mx-2">
                             <div className="bg-white p-3 border-t-4 border-green-400">
