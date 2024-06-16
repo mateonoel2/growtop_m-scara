@@ -20,7 +20,7 @@ const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo}
               </button>
           </div>
           {isDetailsVisible && (
-              <div className='rounded bg-gray-200 p-3 m-3'>
+              <div className='rounded-xl bg-gray-200 p-3 m-3'>
                   <p className="mb-2">
                       <span className="font-bold">Instrucciones:</span> {instrucciones}
                   </p>
@@ -30,9 +30,10 @@ const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo}
                   <p className="mb-2">
                       <span className="font-bold">Nombre de usuario:</span> {nombre_usuario}
                   </p>
+                  {codigo && (
                   <p className="mb-2">
                       <span className="font-bold">Código:</span> {codigo}
-                  </p>
+                  </p>)}
               </div>
           )}
       </div>) : (
