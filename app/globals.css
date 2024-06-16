@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,6 +9,7 @@
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 0, 34, 53;
   --background-end-rgb: 0, 34, 53;
+  --font-family: 'Poppins', sans-serif;
 }
 
 
@@ -37,6 +40,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.bg-green-400 {
+  background-color:  rgb(80 251 185 / var(--tw-bg-opacity));
 }
 
 .app {
