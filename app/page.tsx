@@ -128,7 +128,7 @@ export default function Home() {
             )}
             {session?.user && user && empresa && (
                 <div className="container mx-auto mb-5">
-                    <div className='p-1 m-2 mb-4 bg-gray-500 rounded-2xl'>
+                    <div className='p-0.5 m-2 mb-4 bg-gray-500 rounded-2xl'>
                     <p className='p-5'> ¡Hola! Te damos la bienvenida a la Experiencia de evaluación de Growtop. Este proceso se compone de 4 pruebas: 3 test que puedes realizar desde cualquier dispositivo y 1 sesión en vivo que debes agendar desde el link que está debajo para cumplir con los 4 indicadores y poner a prueba todo tu potencial. ¡Muchos éxitos! </p>
                     </div>
                     <div className="md:flex no-wrap md:-mx-2">
