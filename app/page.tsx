@@ -10,7 +10,6 @@ export default function Home() {
     const [user, setUser] = useState<any>(null);
     const [empresa, setEmpresa] = useState<any>(null);
     const [showPopup, setShowPopup] = useState(false);
-
     const [tasks, setTasks] = useState([
         { id: 0, text: 'Prueba 1', completed: false },
         { id: 1, text: 'Prueba 2', completed: false },
@@ -129,7 +128,7 @@ export default function Home() {
             {session?.user && user && empresa && (
                 <div className="container mx-auto mb-5">
                     <div className='p-0.5 m-2 mb-4 bg-gray-500 rounded-2xl'>
-                    <p className='p-5'> ¡Hola! Te damos la bienvenida a la Experiencia de evaluación de Growtop. Este proceso se compone de 4 pruebas: 3 test que puedes realizar desde cualquier dispositivo y 1 sesión en vivo que debes agendar desde el link que está debajo para cumplir con los 4 indicadores y poner a prueba todo tu potencial. ¡Muchos éxitos! </p>
+                        <p className='p-5'> ¡Hola! Te damos la bienvenida a la Experiencia de evaluación de Growtop. Este proceso se compone de 4 pruebas: 3 test que puedes realizar desde cualquier dispositivo y 1 sesión en vivo que debes agendar desde el link que está debajo para cumplir con los 4 indicadores y poner a prueba todo tu potencial. ¡Muchos éxitos! </p>
                     </div>
                     <div className="md:flex no-wrap md:-mx-2">
                         <div className="w-full md:w-3/12 md:mx-2">
@@ -181,7 +180,7 @@ export default function Home() {
                                     </span>
                                     <span>¿Necesitas Ayuda?</span>
                                 </div>
-                                
+
                                 <div className="text-gray-700 mt-2">
                                     <p className="text-gray-700">Si tienes alguna duda o necesitas ayuda con el proceso, no dudes en contactar a tu especialista de Growtop:</p>
                                     <div className="mt-2">
@@ -232,9 +231,24 @@ export default function Home() {
                                                 </button>
                                             ))}
                                         </div>
-
                                     </div>
-                                    <p className='pl-2 text-red-400'> No olvides marcar cuando termines con una de las tareas</p>
+                                    {tasks.every(task => task.completed) ? (
+                                        <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
+                                            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                                                ¡Felicidades! Has completado todas las tareas,
+                                                por favor llene la encuesta de satisfacción para finalizar el proceso.
+                                            </h2>
+                                            <button
+                                                onClick={() => window.open('https://forms.gle/8Z9Z9Z9Z9Z9Z9Z9Z9', '_blank')}
+                                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                            >
+                                                Encuesta de satisfacción
+                                            </button>
+                                        </div>
+
+                                    ) :
+                                        <p className='pl-2 text-red-400'> No olvides marcar cuando termines con una de las tareas</p>
+                                    }
                                 </div>
                             </div>
 
