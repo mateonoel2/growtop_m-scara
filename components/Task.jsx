@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from 'react';
+import Image from 'next/image';
 
-const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo} ) => {
+const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo, vector} ) => {
     const [isDetailsVisible, setIsDetailsVisible] = useState(true);
 
     const toggleDetails = () => {
@@ -20,7 +21,8 @@ const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo}
               </button>
           </div>
           {isDetailsVisible && (
-              <div className='rounded-xl bg-gray-200 p-3 m-3'>
+              <div className='rounded-xl bg-gray-200 p-3 m-3 grid-cols-2 grid'>
+                <div className="flex flex-col">
                   <p className="mb-2">
                       <span className="font-bold">Instrucciones:</span> {instrucciones}
                   </p>
@@ -34,6 +36,10 @@ const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo}
                   <p className="mb-2">
                       <span className="font-bold">Código:</span> {codigo}
                   </p>)}
+                </div>
+                <div className="flex justify-center">
+                  <Image className="rounded-2xl" src={vector} alt="vector" height={300} width={'auto'} />
+                  </div>
               </div>
           )}
       </div>) : (

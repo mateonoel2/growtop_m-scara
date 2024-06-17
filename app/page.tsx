@@ -1,9 +1,13 @@
 "use client";
 
 import Task from '@/components/Task';
-import { error } from 'console';
 import { useSession, signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import estilo_de_aprendizaje from '../assets/images/estilo_de_aprendizaje.png';
+import assessment_de_liderazgo from '../assets/images/assessment_de_liderazgo.png';
+import test_de_competencias_transversales from '../assets/images/test_de_competencias_transversales.png';
+import dinamic_de_assesment_individual from '../assets/images/assessment_de_liderazgo.png';
+
 
 export default function Home() {
     const [email, setEmail] = useState('');
@@ -17,7 +21,7 @@ export default function Home() {
         { id: 2, text: 'Prueba 3', completed: false },
         { id: 3, text: 'Sesión en vivo', completed: false },
     ]);
-
+    
     const fetchUserData = async () => {
         if (session && session.user && 'id' in session.user) {
             const response = await fetch(`/api/users/${session.user.id}`);
@@ -129,7 +133,7 @@ export default function Home() {
 
 
             )}
-            {session?.user && user && empresa && (
+            {session?.user && user && empresa &&  (
                 <div className="container mx-auto mb-5">
                     <div className='p-0.5 m-2 mb-4 bg-gray-500 rounded-2xl'>
                         <p className='p-5'> ¡Hola! Te damos la bienvenida a la Experiencia de evaluación de Growtop. Este proceso se compone de 4 pruebas: 3 test que puedes realizar desde cualquier dispositivo y 1 sesión en vivo que debes agendar desde el link que está debajo para cumplir con los 4 indicadores y poner a prueba todo tu potencial. ¡Muchos éxitos! </p>
@@ -275,6 +279,7 @@ export default function Home() {
                                         nombre_usuario={"Regístrate con tus nombres, apellidos y correo en la plataforma."}
                                         codigo={empresa.codigo}
                                         titulo={"Prueba 1: Estilos de aprendizaje"}
+                                        vector={estilo_de_aprendizaje}
                                     />
 
                                     <Task
@@ -284,6 +289,7 @@ export default function Home() {
                                         nombre_usuario={"CORREO ELECTRÓNICO al que te llegó esta comunicación y la contraseña la podrás encontrar en el correo de “PRUEBA APL”"}
                                         codigo={""}
                                         titulo={"Prueba 2: Assessment de liderazgo"}
+                                        vector={assessment_de_liderazgo}
                                     />
 
                                     <Task
@@ -293,6 +299,7 @@ export default function Home() {
                                         nombre_usuario={"Regístrate con tus nombres, apellidos y correo en la plataforma."}
                                         codigo={""}
                                         titulo={"Prueba 3: Test de competencias transversales"}
+                                        vector={test_de_competencias_transversales}
                                     />
 
                                     <Task
@@ -302,6 +309,7 @@ export default function Home() {
                                         nombre_usuario={"Regístrate con tus nombres, apellidos y correo en la plataforma."}
                                         codigo={""}
                                         titulo={"Sesión en vivo: Dinámica de Assesment individual"}
+                                        vector={dinamic_de_assesment_individual}
                                     />
 
                                 </div>
