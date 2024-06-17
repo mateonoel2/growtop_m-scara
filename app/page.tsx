@@ -143,8 +143,6 @@ export default function Home() {
                             <div className="bg-white p-3 border-t-4 border-green-400 rounded-xl">
                                 <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">{user.apellido_paterno} {user.apellido_materno}, {user.nombres}</h1>
                                 <h3 className="text-gray-600 font-lg text-semibold leading-6">{user.cargo_actual} | {user.area_actual}</h3>
-                                <p className="text-sm text-gray-500 hover:text-gray-600 leading-6">El Assessment de Competencias se está utilizando para el
-                                    siguiente proceso: {user.razon_assesment}</p>
                                 <ul
                                     className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
                                     <li className="flex items-center py-3">
