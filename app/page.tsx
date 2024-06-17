@@ -1,6 +1,7 @@
 "use client";
 
 import Task from '@/components/Task';
+import { error } from 'console';
 import { useSession, signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
@@ -92,8 +93,11 @@ export default function Home() {
                             action={async () => {
                                 await signIn("email", { email, redirect: false })
                                     .then((value) => {
-                                        if (value && value.ok) {
+                                        if (value && value.ok && value.error==null) {
                                             setShowPopup(true);
+                                        }
+                                        else {
+                                            alert("No se pudo iniciar sesión, por favor ingrese un correo válido.")
                                         }
                                     })
                             }}
