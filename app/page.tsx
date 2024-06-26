@@ -88,7 +88,7 @@ export default function Home() {
 
     return (
         <>
-            {!session && (
+            {session===null && (
                 <div className="mx-auto max-w-lg bg-white p-7 border-t-4 border-green-400 rounded">
                     <div className="mx-auto space-y-8 w-full max-w-md">
                         <form
