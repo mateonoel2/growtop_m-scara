@@ -293,7 +293,7 @@ export default function Home() {
                                         link={user.links[1]}
                                         nombre_usuario={"CORREO ELECTRÓNICO al que te llegó esta comunicación y la contraseña la podrás encontrar en el correo de “PRUEBA APL”"}
                                         codigo={""}
-                                        titulo={"Prueba 2: Assessment de liderazgo"}
+                                        titulo={"Prueba 2: Potencial de liderazgo"}
                                         vector={assessment_de_liderazgo}
                                     />
 
