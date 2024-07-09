@@ -252,7 +252,7 @@ export default function Home() {
                                                 por favor llene la encuesta de satisfacción para finalizar el proceso.
                                             </h2>
                                             <button
-                                                onClick={() => window.open('https://forms.gle/8Z9Z9Z9Z9Z9Z9Z9Z9', '_blank')}
+                                                onClick={() => window.open('https://forms.office.com/r/0gqiGCxgv6', '_blank')}
                                                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                             >
                                                 Encuesta de satisfacción
@@ -282,17 +282,17 @@ export default function Home() {
                                         instrucciones={"Ingresa al link del test y complétalo con todos los datos que se requieren, no hay tiempo límite, recuerda que no hay respuesta buena o mala."}
                                         link={user.links[0]}
                                         nombre_usuario={"Regístrate con tus nombres, apellidos y correo en la plataforma."}
-                                        codigo={empresa.codigo}
+                                        codigo={""}
                                         titulo={"Prueba 1: Estilos de aprendizaje"}
                                         vector={estilo_de_aprendizaje}
                                     />
 
                                     <Task
                                         link_status={user.links_status[1]}
-                                        instrucciones={"Te llegará un correo de bienvenida directamente de la plataforma LEIRO ASSESSMENTS con un link, tu correo y una contraseña para ingresar directamente a una plataforma con una imagen como la de arriba."}
+                                        instrucciones={"Conteste las preguntas pensando en cómo es la manera en que usted hace su trabajo cada día. Para acceder a la evaluación de clic en el link y llene los datos solicitados utilizando la información que se le brinda a continuación."}
                                         link={user.links[1]}
-                                        nombre_usuario={"CORREO ELECTRÓNICO al que te llegó esta comunicación y la contraseña la podrás encontrar en el correo de “PRUEBA APL”"}
-                                        codigo={""}
+                                        nombre_usuario={"<usuario>"}
+                                        codigo={"<contrasena>"}
                                         titulo={"Prueba 2: Potencial de liderazgo"}
                                         vector={assessment_de_liderazgo}
                                     />

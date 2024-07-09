@@ -14,9 +14,9 @@ const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo,
     <>
     {link_status === "pending" ? (
       <div className="mt-5 mb-5">
-          <div className="flex items-center ">
-              <h4 className="text-gray-700 font-semibold text-lg">{titulo}</h4>
-              <button onClick={toggleDetails} className="hover:text-green-400 ml-2">
+          <div className="cursor-pointer flex items-center text-gray-700 hover:text-green-400"onClick={toggleDetails}>
+              <h4 className="font-semibold text-lg">{titulo}</h4>
+              <button className="ml-2">
                   {isDetailsVisible ? "-" : "+"}
               </button>
           </div>
@@ -34,7 +34,7 @@ const Task = ({link_status, instrucciones, link, nombre_usuario, codigo, titulo,
                   </p>
                   {codigo && (
                   <p className="mb-2">
-                      <span className="font-bold">Código:</span> {codigo}
+                      <span className="font-bold">Contraseña:</span> {codigo}
                   </p>)}
                 </div>
                 <div className="flex justify-center">
