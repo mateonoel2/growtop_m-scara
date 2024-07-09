@@ -159,7 +159,7 @@ export default function Home() {
                                     </li>
                                     <li className="flex items-center py-3">
                                         <span>Fin del assesment</span>
-                                        <span className="ml-auto">{empresa.fecha_fin}</span>
+                                        <span className="ml-auto">{user.fecha_fin}</span>
                                     </li>
                                 </ul>
                             </div>
