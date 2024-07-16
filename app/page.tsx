@@ -3,6 +3,8 @@
 import Task from '@/components/Task';
 import { useSession, signIn } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import estilo_de_aprendizaje from '../assets/images/estilo_de_aprendizaje.png';
 import assessment_de_liderazgo from '../assets/images/assessment_de_liderazgo.png';
 import test_de_competencias_transversales from '../assets/images/test_de_competencias_transversales.png';
@@ -324,6 +326,8 @@ export default function Home() {
                 </div>
 
             )}
+             <Analytics />
+             <SpeedInsights />
         </>
     );
 }
