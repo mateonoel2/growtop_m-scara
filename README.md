@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### README.md
 
-## Getting Started
+# GrowTop Assessment de Competencias
 
-First, run the development server:
+Bienvenido a la plataforma de Assessment de Competencias de GrowTop. Este proyecto proporciona un entorno donde los clientes pueden realizar cuatro pruebas de evaluación de competencias ofrecidas por nuestro producto.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Descripción
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La plataforma de Assessment de Competencias de GrowTop es una herramienta en línea diseñada para ayudar a los clientes a evaluar y mejorar las habilidades y competencias de su equipo. La plataforma ofrece cuatro pruebas principales que permiten a los usuarios medir diversas competencias clave.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Características
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Pruebas de Competencias:** Cuatro pruebas principales para evaluar diversas competencias.
+- **Autenticación y Autorización:** Seguridad robusta mediante NextAuth.js.
+- **Gestión de Imágenes:** Uso de Cloudinary para la optimización y gestión de imágenes.
+- **Notificaciones:** Envío de correos electrónicos utilizando Postmark.
+- **Base de Datos:** MongoDB para el almacenamiento y gestión de datos.
+- **Diseño Responsivo:** Interfaz diseñada con Tailwind CSS para una experiencia de usuario óptima en dispositivos móviles y de escritorio.
 
-## Learn More
+## Tecnologías Utilizadas
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework Principal:** [Next.js](https://nextjs.org/)
+- **Lenguajes de Programación:** JavaScript (JS), TypeScript (TS), CSS
+- **Herramientas de Diseño:** [Tailwind CSS](https://tailwindcss.com/)
+- **Librerías Externas:** [NextAuth.js](https://next-auth.js.org/)
+- **Nube de Imágenes:** [Cloudinary](https://cloudinary.com/)
+- **Servicios de SMTP:** [Postmark](https://postmarkapp.com/)
+- **Base de Datos:** [MongoDB](https://www.mongodb.com/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Instalación y Configuración
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **Clonar el Repositorio:**
 
-## Deploy on Vercel
+   ```bash
+   git clone https://github.com/mateonoel2/growtop_m-scara.git
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. **Instalar Dependencias:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+   ```bash
+   npm install
+   ```
+
+3. **Configurar Variables de Entorno:**
+
+   Crea un archivo `.env.local` en la raíz del proyecto y añade las siguientes variables, puede guiarse del archivo `.env.example`
+
+4. **Iniciar el Servidor de Desarrollo:**
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Acceder a la Plataforma:**
+
+   Abre tu navegador y dirígete a [http://localhost:3000](http://localhost:3000).
+
+## Despliegue
+
+La plataforma está alojada en Vercel y se puede desplegar fácilmente con los siguientes pasos:
+
+1. **Conectar a Vercel:**
+
+   Inicia sesión en [Vercel](https://vercel.com/) y conecta tu cuenta de GitHub.
+
+2. **Importar el Proyecto:**
+
+   Importa el repositorio de GitHub a Vercel.
+
+3. **Configurar Variables de Entorno:**
+
+   En el panel de configuración de Vercel, añade las mismas variables de entorno configuradas en el archivo `.env`.
+
+4. **Desplegar:**
+
+   Vercel desplegará automáticamente la plataforma cada vez que se realice un push a la rama principal del repositorio.
+
+## Contribución
+
+1. **Realizar un Fork del Repositorio:**
+2. **Crear una Rama para tu Función:**
+
+   ```bash
+   git checkout -b nombre-de-tu-rama
+   ```
+
+3. **Hacer Commit de tus Cambios:**
+
+   ```bash
+   git commit -m "Descripción de tus cambios"
+   ```
+
+4. **Hacer Push a la Rama:**
+
+   ```bash
+   git push origin nombre-de-tu-rama
+   ```
+
+5. **Crear un Pull Request en GitHub.**
+
+## Soporte
+
+Para cualquier consulta o problema, por favor contacta a nuestro equipo de soporte en [app@growtop.pe](mailto:app@growtop.pe).
+
+## Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
