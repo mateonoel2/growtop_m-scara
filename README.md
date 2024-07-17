@@ -1,5 +1,3 @@
-### README.md
-
 # GrowTop Assessment de Competencias
 
 Bienvenido a la plataforma de Assessment de Competencias de GrowTop. Este proyecto proporciona un entorno donde los clientes pueden realizar cuatro pruebas de evaluación de competencias ofrecidas por nuestro producto.
