@@ -1,26 +1,21 @@
-//Get all user info
-import clientPromise from "@/utils/mongodb"
-import { ObjectId } from "mongodb";
+import { prisma } from "@/utils/prisma";
 
 export const GET = async (request, { params }) => {
     try {
-        const db = await clientPromise;
-        const collection = db.db("test").collection('users');
-
-        //Get the user info
-
-        var o_id = new ObjectId(params.id);
-
-        const user = await collection.find({ _id: o_id }).toArray().then((data) => {
-            return data[0]
+        // Realizar la consulta para obtener la información del cliente
+        const cliente = await prisma.clientes.findUnique({
+            where: {
+                cliente_id: parseInt(params.id),
+            },
         });
 
-        if (!user) {
-            return new Response("User not found", { status: 404 })
+        if (!cliente) {
+            return new Response("Cliente not found", { status: 404 });
         }
 
-        return new Response(JSON.stringify(user), { status: 200 })
+        return new Response(JSON.stringify(cliente), { status: 200 });
     } catch (error) {
-        return new Response("Failed to fetch all prompts", { status: 500 })
+        console.error("Error fetching cliente:", error);
+        return new Response("Failed to fetch cliente", { status: 500 });
     }
-}
+};

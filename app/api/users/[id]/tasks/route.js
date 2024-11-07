@@ -1,47 +1,41 @@
-import clientPromise from "@/utils/mongodb"
-import { ObjectId } from "mongodb";
+import { prisma } from "@/utils/prisma";
 
 export const PATCH = async (request, { params }) => {
     try {
-        const db = await clientPromise;
-        const collection = db.db("test").collection('users');
-
-        //Get the user info
-
-        var o_id = new ObjectId(params.id);
-
-        const user = await collection.find({ _id: o_id }).toArray().then((data) => {
-            return data[0]
+        // Obtener la información del cliente por ID
+        const cliente = await prisma.clientes.findUnique({
+            where: {
+                cliente_id: parseInt(params.id),
+            },
         });
 
-        if (!user) {
-            return new Response("User not found", { status: 404 })
+        if (!cliente) {
+            return new Response("Cliente not found", { status: 404 });
         }
 
-        //Update the user info
-        const body = await request.json()
+        // Parseamos links_status para modificarlo. Asumimos que está almacenado como JSON.
+        let links_status = JSON.parse(cliente.links_status);
+
+        // Leer el cuerpo de la solicitud para obtener el índice a actualizar
+        const body = await request.json();
         const { id } = body;
-        
-        //update user list of tasks on index id
-        if(user.links_status[id] === "completed"){
-            user.links_status[id] = "pending";
-        }
-        else{
-            user.links_status[id] = "completed";
-        }
 
-        //update the user in the database
-        const updatedUser = await collection.findOneAndUpdate(
-            { _id: o_id },
-            { $set: { links_status: user.links_status } },
-            { returnDocument: 'after' }
-        ).then((data) => {
-            return data.value
+        // Actualizar el estado del link en el índice especificado
+        links_status[id] = links_status[id] === "completed" ? "pending" : "completed";
+
+        // Guardar el estado actualizado en la base de datos
+        const updatedCliente = await prisma.clientes.update({
+            where: {
+                cliente_id: parseInt(params.id),
+            },
+            data: {
+                links_status: JSON.stringify(links_status),
+            },
         });
-        
 
-        return new Response(JSON.stringify(updatedUser), { status: 200 })
+        return new Response(JSON.stringify(updatedCliente), { status: 200 });
     } catch (error) {
-        return new Response("Failed to fetch all prompts", { status: 500 })
+        console.error("Error updating cliente:", error);
+        return new Response("Failed to update cliente", { status: 500 });
     }
-}
+};
