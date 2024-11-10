@@ -1,6 +1,7 @@
 import sqlite3 from "sqlite3";
 
-const db = new sqlite3.Database("./database.sqlite");
+// Ajusta la ruta para apuntar al archivo en la carpeta scripts
+const db = new sqlite3.Database("./scripts/database.sqlite");
 
 export const getUserByEmail = (email) => {
     return new Promise((resolve, reject) => {
