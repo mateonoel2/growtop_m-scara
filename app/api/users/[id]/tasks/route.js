@@ -1,47 +1,30 @@
-import clientPromise from "@/utils/mongodb"
-import { ObjectId } from "mongodb";
+import { openDB } from '@/utils/sqlite';
 
 export const PATCH = async (request, { params }) => {
     try {
-        const db = await clientPromise;
-        const collection = db.db("test").collection('users');
+        const db = await openDB();
+        const cliente = await db.get('SELECT * FROM clientes WHERE cliente_id = ?', [params.id]);
 
-        //Get the user info
-
-        var o_id = new ObjectId(params.id);
-
-        const user = await collection.find({ _id: o_id }).toArray().then((data) => {
-            return data[0]
-        });
-
-        if (!user) {
-            return new Response("User not found", { status: 404 })
+        if (!cliente) {
+            return new Response("Cliente not found", { status: 404 });
         }
 
-        //Update the user info
-        const body = await request.json()
-        const { id } = body;
-        
-        //update user list of tasks on index id
-        if(user.links_status[id] === "completed"){
-            user.links_status[id] = "pending";
-        }
-        else{
-            user.links_status[id] = "completed";
-        }
+        const body = await request.json();
+        const { prueba_id, status } = body;
 
-        //update the user in the database
-        const updatedUser = await collection.findOneAndUpdate(
-            { _id: o_id },
-            { $set: { links_status: user.links_status } },
-            { returnDocument: 'after' }
-        ).then((data) => {
-            return data.value
-        });
-        
+        // Actualizar el estado de la prueba en cliente_pruebas
+        await db.run(
+            'UPDATE cliente_pruebas SET status = ? WHERE cliente_id = ? AND prueba_id = ?',
+            [status, params.id, prueba_id]
+        );
 
-        return new Response(JSON.stringify(updatedUser), { status: 200 })
+        const updatedTask = await db.get(
+            'SELECT * FROM cliente_pruebas WHERE cliente_id = ? AND prueba_id = ?',
+            [params.id, prueba_id]
+        );
+
+        return new Response(JSON.stringify(updatedTask), { status: 200 });
     } catch (error) {
-        return new Response("Failed to fetch all prompts", { status: 500 })
+        return new Response("Failed to update task", { status: 500 });
     }
-}
+};
