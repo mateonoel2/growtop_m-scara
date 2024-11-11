@@ -49,6 +49,15 @@ db.serialize(() => {
             FOREIGN KEY (prueba_id) REFERENCES pruebas(prueba_id)
         );
     `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS verification_tokens (
+          identifier TEXT,
+          token TEXT,
+          expires TEXT
+        );
+    `);
+      
 });
 
 db.close();
