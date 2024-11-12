@@ -16,21 +16,35 @@ export function SQLiteAdapter() {
         });
       });
     },
+
     async createVerificationToken({ identifier, token, expires }) {
       return new Promise((resolve, reject) => {
+        // Eliminar cualquier token previo para el identificador actual
         db.run(
-          `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
-          [identifier, token, expires.toISOString()],
-          function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve({ identifier, token, expires });
+          `DELETE FROM verification_tokens WHERE identifier = ?`,
+          [identifier],
+          (deleteErr) => {
+            if (deleteErr) {
+              return reject(deleteErr);
             }
+
+            // Insertar el nuevo token
+            db.run(
+              `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
+              [identifier, token, expires.toISOString()],
+              function (err) {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve({ identifier, token, expires });
+                }
+              }
+            );
           }
         );
       });
     },
+
     async useVerificationToken({ identifier, token }) {
       return new Promise((resolve, reject) => {
         db.get(
