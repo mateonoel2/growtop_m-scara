@@ -1,4 +1,3 @@
-// utils/sqliteAdapter.js
 import sqlite3 from "sqlite3";
 
 const db = new sqlite3.Database("./scripts/database.sqlite");
@@ -19,7 +18,6 @@ export function SQLiteAdapter() {
 
     async createVerificationToken({ identifier, token, expires }) {
       return new Promise((resolve, reject) => {
-        // Eliminar cualquier token previo para el identificador actual
         db.run(
           `DELETE FROM verification_tokens WHERE identifier = ?`,
           [identifier],
@@ -28,7 +26,6 @@ export function SQLiteAdapter() {
               return reject(deleteErr);
             }
 
-            // Insertar el nuevo token
             db.run(
               `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
               [identifier, token, expires.toISOString()],
@@ -52,7 +49,7 @@ export function SQLiteAdapter() {
           [identifier, token],
           (err, row) => {
             if (err || !row) {
-              reject(err || new Error("Token not found"));
+              reject(err || new Error("Token no encontrado."));
             } else {
               db.run(
                 `DELETE FROM verification_tokens WHERE identifier = ? AND token = ?`,

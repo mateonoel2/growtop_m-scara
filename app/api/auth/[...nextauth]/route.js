@@ -1,20 +1,26 @@
 import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import { SQLiteAdapter } from "../../../../utils/sqliteAdapter";
-import { ServerClient } from 'postmark'; // Importa ServerClient de postmark directamente
+import { ServerClient } from "postmark";
 
-// Configurar el cliente de Postmark
-const client = new ServerClient("POSTMARK_API_TEST"); // Utiliza directamente ServerClient
+// Configuración dinámica del cliente de Postmark
+const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 
 // Configurar la función de envío de correos con Postmark
 async function sendVerificationRequest({ identifier, url, provider }) {
   const { from } = provider;
-  await client.sendEmail({
-    From: from,
-    To: identifier,
-    Subject: "Inicia sesión en tu cuenta",
-    TextBody: `Inicia sesión en tu cuenta de Growtop usando el siguiente enlace:\n\n${url}\n\nEste enlace es válido solo por unos minutos.`,
-  });
+  try {
+    await client.sendEmail({
+      From: from,
+      To: identifier,
+      Subject: "Inicia sesión en tu cuenta",
+      TextBody: `Inicia sesión en tu cuenta de Growtop usando el siguiente enlace:\n\n${url}\n\nEste enlace es válido solo por unos minutos.`,
+    });
+    console.log(`Correo enviado a ${identifier}`);
+  } catch (error) {
+    console.error(`Error al enviar correo a ${identifier}:`, error);
+    throw new Error("No se pudo enviar el correo de verificación.");
+  }
 }
 
 const authOptions = {
