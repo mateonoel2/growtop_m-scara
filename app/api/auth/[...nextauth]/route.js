@@ -73,8 +73,12 @@
 
 import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-import { SQLiteAdapter } from "../../../../utils/sqliteAdapter";
+import { SQLiteAdapter } from "../../../../utils/sqliteAdapter"; // Asegúrate de que esta ruta sea válida
 import { ServerClient } from "postmark";
+import sqlite3 from "sqlite3";
+
+// Ruta absoluta de la base de datos SQLite
+const databasePath = "C:/Users/Eduardo/OneDrive/growtop_m-scara/scripts/database.sqlite"; // Cambia esta ruta a la correcta en tu sistema
 
 // Configuración del cliente de Postmark
 const client = new ServerClient(process.env.POSTMARK_SERVER_TOKEN);
@@ -107,6 +111,7 @@ async function sendVerificationRequest({ identifier, url, provider }) {
   }
 }
 
+// Opciones de autenticación
 const authOptions = {
   providers: [
     EmailProvider({
@@ -115,7 +120,13 @@ const authOptions = {
       sendVerificationRequest,
     }),
   ],
-  adapter: SQLiteAdapter(),
+  adapter: SQLiteAdapter({
+    db: new sqlite3.Database(databasePath, sqlite3.OPEN_READWRITE, (err) => {
+      if (err) {
+        console.error("Error al abrir la base de datos:", err.message);
+      }
+    }),
+  }),
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/signin", // Página personalizada de inicio de sesión
@@ -142,8 +153,9 @@ const authOptions = {
       return true;
     },
   },
-  debug: true,
+  debug: true, // Habilita logs de debugging
 };
 
+// Exporta las rutas GET y POST para NextAuth
 export const GET = NextAuth(authOptions);
 export const POST = NextAuth(authOptions);

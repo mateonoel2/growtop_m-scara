@@ -1,6 +1,17 @@
 import sqlite3 from "sqlite3";
 
-const db = new sqlite3.Database("./scripts/database.sqlite");
+const db = new sqlite3.Database("./scripts/database.sqlite", (err) => {
+  if (err) {
+    console.error("Error al conectar la base de datos SQLite:", err.message);
+  }
+});
+
+// Configuración adicional (opcional)
+db.configure("busyTimeout", 5000); // Maneja el bloqueo de base de datos
+
+export const mySQLiteAdapter = {
+  db,
+};;
 
 export function SQLiteAdapter() {
   return {
