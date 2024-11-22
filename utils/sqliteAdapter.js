@@ -16,46 +16,27 @@ export function SQLiteAdapter() {
       });
     },
 
-    async createVerificationToken({ identifier, token, expires }) {
-      return new Promise((resolve, reject) => {
-        db.run(
-          `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
-          [identifier, token, expires.toISOString()],
-          function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve({ identifier, token, expires });
-            }
-          }
-        );
-      });
-    },
+    async createVerificationToken(token) {
+      const { identifier, token: hashedToken, expires } = token;
     
-    async useVerificationToken({ identifier, token }) {
-      return new Promise((resolve, reject) => {
-        db.get(
-          `SELECT * FROM verification_tokens WHERE identifier = ? AND token = ?`,
-          [identifier, token],
-          (err, row) => {
-            if (err || !row) {
-              reject(new Error("Token no encontrado."));
-            } else {
-              db.run(
-                `DELETE FROM verification_tokens WHERE identifier = ? AND token = ?`,
-                [identifier, token],
-                (delErr) => {
-                  if (delErr) {
-                    reject(delErr);
-                  } else {
-                    resolve(row);
-                  }
-                }
-              );
-            }
-          }
-        );
-      });
-    },    
+      await db.run(
+        `INSERT OR REPLACE INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
+        [identifier, hashedToken, expires]
+      );
+      return token;
+    },
+        
+    useVerificationToken: async ({ identifier, token }) => {
+      const tokenData = await db.get(
+        `SELECT * FROM verification_tokens WHERE identifier = ? AND token = ?`,
+        [identifier, token]
+      );
+    
+      if (!tokenData) {
+        throw new Error("Token no encontrado o inválido");
+      }
+    
+      return tokenData;
+    },       
   };
 }
