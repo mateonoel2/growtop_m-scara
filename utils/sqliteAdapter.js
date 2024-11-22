@@ -19,29 +19,19 @@ export function SQLiteAdapter() {
     async createVerificationToken({ identifier, token, expires }) {
       return new Promise((resolve, reject) => {
         db.run(
-          `DELETE FROM verification_tokens WHERE identifier = ?`,
-          [identifier],
-          (deleteErr) => {
-            if (deleteErr) {
-              return reject(deleteErr);
+          `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
+          [identifier, token, expires.toISOString()],
+          function (err) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve({ identifier, token, expires });
             }
-
-            db.run(
-              `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
-              [identifier, token, expires.toISOString()],
-              function (err) {
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve({ identifier, token, expires });
-                }
-              }
-            );
           }
         );
       });
     },
-
+    
     async useVerificationToken({ identifier, token }) {
       return new Promise((resolve, reject) => {
         db.get(
@@ -49,7 +39,7 @@ export function SQLiteAdapter() {
           [identifier, token],
           (err, row) => {
             if (err || !row) {
-              reject(err || new Error("Token no encontrado."));
+              reject(new Error("Token no encontrado."));
             } else {
               db.run(
                 `DELETE FROM verification_tokens WHERE identifier = ? AND token = ?`,
@@ -66,6 +56,6 @@ export function SQLiteAdapter() {
           }
         );
       });
-    },
+    },    
   };
 }
