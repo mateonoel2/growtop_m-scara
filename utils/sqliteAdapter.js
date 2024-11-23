@@ -1,14 +1,7 @@
 import sqlite3 from "sqlite3";
 
 export const SQLiteAdapter = () => {
-  const db = new sqlite3.Database("./scripts/database.sqlite", (err) => {
-    if (err) {
-      console.error("Error al conectar la base de datos SQLite:", err.message);
-    }
-  });
-
-  // Configuración para evitar bloqueos
-  db.run("PRAGMA busy_timeout = 5000");
+  const db = new sqlite3.Database("./scripts/database.sqlite");
 
   return {
     async getUserByEmail(email) {
@@ -27,39 +20,59 @@ export const SQLiteAdapter = () => {
       const { identifier, token: hashedToken, expires } = token;
 
       return new Promise((resolve, reject) => {
-        db.run(
-          `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
-          [identifier, hashedToken, expires],
-          (err) => {
-            if (err) {
-              console.error("Error al crear el token de verificación:", err.message);
-              reject(err);
-            } else {
-              resolve(token);
+        db.serialize(() => {
+          // Evita conflictos eliminando tokens previos
+          db.run(
+            `DELETE FROM verification_tokens WHERE identifier = ?`,
+            [identifier],
+            (deleteErr) => {
+              if (deleteErr) {
+                reject(deleteErr);
+              } else {
+                db.run(
+                  `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
+                  [identifier, hashedToken, expires],
+                  (insertErr) => {
+                    if (insertErr) {
+                      reject(insertErr);
+                    } else {
+                      resolve(token);
+                    }
+                  }
+                );
+              }
             }
-          }
-        );
+          );
+        });
       });
     },
 
-    async useVerificationToken({ identifier, token }) {
+    useVerificationToken: async ({ identifier, token }) => {
+      console.log("Buscando token:", identifier, token); // Log para verificar parámetros
+    
       return new Promise((resolve, reject) => {
         db.get(
           `SELECT * FROM verification_tokens WHERE identifier = ? AND token = ?`,
           [identifier, token],
           (err, row) => {
             if (err) {
+              console.error("Error al buscar el token de verificación:", err.message);
               reject(err);
             } else if (!row) {
+              console.warn("Token no encontrado:", { identifier, token });
               resolve(null);
             } else {
+              console.log("Token encontrado:", row); // Log para confirmar token encontrado
+    
               db.run(
                 `DELETE FROM verification_tokens WHERE identifier = ? AND token = ?`,
                 [identifier, token],
-                (err) => {
-                  if (err) {
-                    reject(err);
+                (deleteErr) => {
+                  if (deleteErr) {
+                    console.error("Error al eliminar el token:", deleteErr.message);
+                    reject(deleteErr);
                   } else {
+                    console.log("Token eliminado correctamente.");
                     resolve(row);
                   }
                 }
@@ -68,6 +81,6 @@ export const SQLiteAdapter = () => {
           }
         );
       });
-    },
+    },    
   };
 };

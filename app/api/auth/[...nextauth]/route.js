@@ -118,10 +118,23 @@ const authOptions = {
     error: "/auth/error",
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      return baseUrl; // Asegúrate de redirigir siempre al dominio base
+    async redirect() {
+      return "/"; 
     },
-  },
+    async signIn({email }) {
+      if (!email?.verificationRequest) {
+        console.error("Error de inicio de sesión: correo no verificado.");
+        return false;
+      }
+      return true;
+    },
+    async session({ session, user }) {
+      if (user) {
+        session.user.id = user.id;
+      }
+      return session;
+    },
+  },  
   debug: true, // Habilita logs de debugging
 };
 
