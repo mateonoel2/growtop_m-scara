@@ -1,19 +1,15 @@
 import sqlite3 from "sqlite3";
 
-const db = new sqlite3.Database("./scripts/database.sqlite", (err) => {
-  if (err) {
-    console.error("Error al conectar la base de datos SQLite:", err.message);
-  }
-});
+export const SQLiteAdapter = () => {
+  const db = new sqlite3.Database("./scripts/database.sqlite", (err) => {
+    if (err) {
+      console.error("Error al conectar la base de datos SQLite:", err.message);
+    }
+  });
 
-// Configuración adicional (opcional)
-db.configure("busyTimeout", 5000); // Maneja el bloqueo de base de datos
+  // Configuración para evitar bloqueos
+  db.run("PRAGMA busy_timeout = 5000");
 
-export const mySQLiteAdapter = {
-  db,
-};;
-
-export function SQLiteAdapter() {
   return {
     async getUserByEmail(email) {
       return new Promise((resolve, reject) => {
@@ -29,25 +25,49 @@ export function SQLiteAdapter() {
 
     async createVerificationToken(token) {
       const { identifier, token: hashedToken, expires } = token;
-    
-      await db.run(
-        `INSERT OR REPLACE INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
-        [identifier, hashedToken, expires]
-      );
-      return token;
+
+      return new Promise((resolve, reject) => {
+        db.run(
+          `INSERT INTO verification_tokens (identifier, token, expires) VALUES (?, ?, ?)`,
+          [identifier, hashedToken, expires],
+          (err) => {
+            if (err) {
+              console.error("Error al crear el token de verificación:", err.message);
+              reject(err);
+            } else {
+              resolve(token);
+            }
+          }
+        );
+      });
     },
-        
-    useVerificationToken: async ({ identifier, token }) => {
-      const tokenData = await db.get(
-        `SELECT * FROM verification_tokens WHERE identifier = ? AND token = ?`,
-        [identifier, token]
-      );
-    
-      if (!tokenData) {
-        throw new Error("Token no encontrado o inválido");
-      }
-    
-      return tokenData;
-    },       
+
+    async useVerificationToken({ identifier, token }) {
+      return new Promise((resolve, reject) => {
+        db.get(
+          `SELECT * FROM verification_tokens WHERE identifier = ? AND token = ?`,
+          [identifier, token],
+          (err, row) => {
+            if (err) {
+              reject(err);
+            } else if (!row) {
+              resolve(null);
+            } else {
+              db.run(
+                `DELETE FROM verification_tokens WHERE identifier = ? AND token = ?`,
+                [identifier, token],
+                (err) => {
+                  if (err) {
+                    reject(err);
+                  } else {
+                    resolve(row);
+                  }
+                }
+              );
+            }
+          }
+        );
+      });
+    },
   };
-}
+};
