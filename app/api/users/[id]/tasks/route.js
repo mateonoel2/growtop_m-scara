@@ -1,30 +1,46 @@
-import { openDB } from '@/utils/sqlite';
+import { dataSource } from "@/utils/dataSource"; // Importa la configuración del DataSource
+import { ClientePrueba } from "@/entities/ClientePrueba"; // Importa la entidad ClientePrueba
+import { Cliente } from "@/entities/Cliente"; // Importa la entidad Cliente
 
 export const PATCH = async (request, { params }) => {
     try {
-        const db = await openDB();
-        const cliente = await db.get('SELECT * FROM clientes WHERE cliente_id = ?', [params.id]);
+        // Inicializa el DataSource si no está inicializado
+        if (!dataSource.isInitialized) {
+            await dataSource.initialize();
+        }
+
+        const clienteRepository = dataSource.getRepository(Cliente);
+        const clientePruebaRepository = dataSource.getRepository(ClientePrueba);
+
+        // Busca el cliente por su ID
+        const cliente = await clienteRepository.findOne({
+            where: { cliente_id: params.id },
+        });
 
         if (!cliente) {
             return new Response("Cliente not found", { status: 404 });
         }
 
+        // Obtén el cuerpo de la solicitud
         const body = await request.json();
         const { prueba_id, status } = body;
 
-        // Actualizar el estado de la prueba en cliente_pruebas
-        await db.run(
-            'UPDATE cliente_pruebas SET status = ? WHERE cliente_id = ? AND prueba_id = ?',
-            [status, params.id, prueba_id]
-        );
+        // Actualiza el estado de la prueba
+        const existingPrueba = await clientePruebaRepository.findOne({
+            where: { cliente_id: params.id, prueba_id },
+        });
 
-        const updatedTask = await db.get(
-            'SELECT * FROM cliente_pruebas WHERE cliente_id = ? AND prueba_id = ?',
-            [params.id, prueba_id]
-        );
+        if (!existingPrueba) {
+            return new Response("Prueba not found for the given cliente", { status: 404 });
+        }
 
-        return new Response(JSON.stringify(updatedTask), { status: 200 });
+        existingPrueba.status = status; // Actualiza el estado
+        await clientePruebaRepository.save(existingPrueba); // Guarda los cambios
+
+        // Devuelve la prueba actualizada
+        return new Response(JSON.stringify(existingPrueba), { status: 200 });
     } catch (error) {
+        console.error("Error updating task:", error);
         return new Response("Failed to update task", { status: 500 });
     }
 };
