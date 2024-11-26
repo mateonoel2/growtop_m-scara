@@ -34,11 +34,11 @@ const authOptions = {
   adapter: TypeORMAdapter({
     type: "mysql",
     host: "localhost",
-    port: 3309,
-    username: "root", // Cambiar si es necesario
+    port: 3309, // Cambia si usas un puerto diferente
+    username: "root", // Cambia según tu configuración
     password: "", // Contraseña de la base de datos
     database: "growtop_db", // Nombre de tu base de datos
-    synchronize: true,
+    synchronize: true, // Cambia a false en producción
   }),
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
@@ -47,8 +47,8 @@ const authOptions = {
     error: "/auth/error",
   },
   callbacks: {
-    async redirect() {
-      return "/";
+    async redirect({ url, baseUrl }) {
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
     async session({ session, user }) {
       if (user) {
@@ -60,11 +60,7 @@ const authOptions = {
   debug: true,
 };
 
-// Exporta las rutas GET y POST para NextAuth
-export const GET = async (req, res) => {
+// Exporta la configuración para las rutas GET y POST
+export default async function handler(req, res) {
   return NextAuth(req, res, authOptions);
-};
-
-export const POST = async (req, res) => {
-  return NextAuth(req, res, authOptions);
-};
+}
