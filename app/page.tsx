@@ -102,17 +102,17 @@ export default function Home() {
             {session === null && (
                 <div className="mx-auto max-w-lg bg-white p-7 border-t-4 border-green-400 rounded">
                     <div className="mx-auto space-y-8 w-full max-w-md">
-                        <form
-                            onSubmit={async (e) => {
-                                e.preventDefault(); // Evita que el formulario haga un envío estándar
+                        <form 
+                            action={async () => {
                                 await signIn("email", { email, redirect: false })
                                     .then((value) => {
                                         if (value && value.ok && value.error == null) {
                                             setShowPopup(true);
-                                        } else {
-                                            alert("No se pudo iniciar sesión, por favor ingrese un correo válido.");
                                         }
-                                    });
+                                        else {
+                                            alert("No se pudo iniciar sesión, por favor ingrese un correo válido.")
+                                        }
+                                    })
                             }}
                         >
                             <input
