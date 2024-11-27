@@ -1,44 +1,48 @@
-import { dataSource } from "@/utils/dataSource"; // Importa la configuración del DataSource
-import { ClientePrueba } from "@/entities/ClientePrueba"; // Importa la entidad ClientePrueba
-import { Cliente } from "@/entities/Cliente"; // Importa la entidad Cliente
+import { CustomAdapter } from "../../../../lib/custom-adapter"; // Importa el CustomAdapter para trabajar con MySQL
 
 export const PATCH = async (request, { params }) => {
     try {
-        // Inicializa el DataSource si no está inicializado
-        if (!dataSource.isInitialized) {
-            await dataSource.initialize();
-        }
+        // Obtén el pool de conexión desde CustomAdapter
+        const pool = CustomAdapter();
 
-        const clienteRepository = dataSource.getRepository(Cliente);
-        const clientePruebaRepository = dataSource.getRepository(ClientePrueba);
+        // Verifica si el cliente existe
+        const [clienteRows] = await pool.query(
+            "SELECT * FROM clientes WHERE cliente_id = ?",
+            [params.id]
+        );
 
-        // Busca el cliente por su ID
-        const cliente = await clienteRepository.findOne({
-            where: { cliente_id: params.id },
-        });
-
-        if (!cliente) {
+        if (clienteRows.length === 0) {
             return new Response("Cliente not found", { status: 404 });
         }
 
-        // Obtén el cuerpo de la solicitud
+        // Obtén los datos de la solicitud
         const body = await request.json();
         const { prueba_id, status } = body;
 
-        // Actualiza el estado de la prueba
-        const existingPrueba = await clientePruebaRepository.findOne({
-            where: { cliente_id: params.id, prueba_id },
-        });
+        // Verifica si la prueba asociada al cliente existe
+        const [pruebaRows] = await pool.query(
+            "SELECT * FROM cliente_pruebas WHERE cliente_id = ? AND prueba_id = ?",
+            [params.id, prueba_id]
+        );
 
-        if (!existingPrueba) {
+        if (pruebaRows.length === 0) {
             return new Response("Prueba not found for the given cliente", { status: 404 });
         }
 
-        existingPrueba.status = status; // Actualiza el estado
-        await clientePruebaRepository.save(existingPrueba); // Guarda los cambios
+        // Actualiza el estado de la prueba
+        await pool.query(
+            "UPDATE cliente_pruebas SET status = ? WHERE cliente_id = ? AND prueba_id = ?",
+            [status, params.id, prueba_id]
+        );
 
-        // Devuelve la prueba actualizada
-        return new Response(JSON.stringify(existingPrueba), { status: 200 });
+        // Recupera la prueba actualizada
+        const [updatedPruebaRows] = await pool.query(
+            "SELECT * FROM cliente_pruebas WHERE cliente_id = ? AND prueba_id = ?",
+            [params.id, prueba_id]
+        );
+
+        // Devuelve la prueba actualizada como respuesta
+        return new Response(JSON.stringify(updatedPruebaRows[0]), { status: 200 });
     } catch (error) {
         console.error("Error updating task:", error);
         return new Response("Failed to update task", { status: 500 });

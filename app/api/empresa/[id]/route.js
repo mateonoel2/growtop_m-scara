@@ -1,26 +1,23 @@
-import { getDataSource } from "@/utils/dataSource"; // Asegúrate de tener configurado el DataSource de TypeORM
-import { Empresa } from "@/entities/Empresa"; // Importa la entidad Empresa
+import { CustomAdapter } from "../../../../lib/custom-adapter"; // Importa el CustomAdapter para trabajar con MySQL
 
 export const GET = async (request, { params }) => {
     try {
-        // Obtén el DataSource
-        const dataSource = await getDataSource();
+        // Obtén una conexión al pool de MySQL
+        const pool = CustomAdapter();
 
-        // Obtén el repositorio de la entidad Empresa
-        const empresaRepository = dataSource.getRepository(Empresa);
+        // Realiza la consulta directamente a la base de datos
+        const [rows] = await pool.query(
+            "SELECT * FROM empresas WHERE empresa_id = ?",
+            [params.id]
+        );
 
-        // Busca la empresa por ID
-        const empresa = await empresaRepository.findOne({
-            where: { empresa_id: params.id }, // Ajusta según tu columna en la entidad
-        });
-
-        // Si no se encuentra, devuelve un 404
-        if (!empresa) {
+        // Si no se encuentra la empresa, devuelve un 404
+        if (rows.length === 0) {
             return new Response("Empresa not found", { status: 404 });
         }
 
         // Devuelve la empresa encontrada
-        return new Response(JSON.stringify(empresa), { status: 200 });
+        return new Response(JSON.stringify(rows[0]), { status: 200 });
     } catch (error) {
         console.error("Error al obtener la empresa:", error);
         return new Response("Failed to fetch empresa", { status: 500 });
