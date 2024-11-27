@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-import { CustomAdapter } from "../../../lib/mysql-adapter"; // Ajusta la ruta si es necesario
+import { CustomAdapter } from "../../../../lib/custom-adapter";
 import { ServerClient } from "postmark";
 
 // Configuración de Postmark
@@ -52,7 +52,11 @@ const authOptions = {
   debug: true,
 };
 
-// Exporta la configuración para las rutas GET y POST
-export default async function handler(req, res) {
-  return NextAuth(req, res, authOptions);
+// Exporta los métodos HTTP requeridos por Next.js
+export async function POST(req, res) {
+  return await NextAuth(req, res, authOptions);
+}
+
+export async function GET(req, res) {
+  return await NextAuth(req, res, authOptions);
 }
