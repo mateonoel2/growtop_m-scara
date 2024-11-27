@@ -103,16 +103,16 @@ export default function Home() {
                 <div className="mx-auto max-w-lg bg-white p-7 border-t-4 border-green-400 rounded">
                     <div className="mx-auto space-y-8 w-full max-w-md">
                         <form
-                            action={async () => {
+                            onSubmit={async (e) => {
+                                e.preventDefault(); // Evita que el formulario haga un envío estándar
                                 await signIn("email", { email, redirect: false })
                                     .then((value) => {
                                         if (value && value.ok && value.error == null) {
                                             setShowPopup(true);
+                                        } else {
+                                            alert("No se pudo iniciar sesión, por favor ingrese un correo válido.");
                                         }
-                                        else {
-                                            alert("No se pudo iniciar sesión, por favor ingrese un correo válido.")
-                                        }
-                                    })
+                                    });
                             }}
                         >
                             <input
@@ -130,6 +130,7 @@ export default function Home() {
                                 Iniciar Sesión
                             </button>
                         </form>
+
                         {showPopup && (
                             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                                 <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full text-center">
