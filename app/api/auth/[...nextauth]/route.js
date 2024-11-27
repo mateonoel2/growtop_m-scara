@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-import { TypeORMAdapter } from "@next-auth/typeorm-legacy-adapter";
+import { CustomAdapter } from "../../../lib/mysql-adapter"; // Ajusta la ruta si es necesario
 import { ServerClient } from "postmark";
 
 // Configuración de Postmark
@@ -31,15 +31,7 @@ const authOptions = {
       sendVerificationRequest,
     }),
   ],
-  adapter: TypeORMAdapter({
-    type: "mysql",
-    host: "localhost",
-    port: 3309, // Cambia si usas un puerto diferente
-    username: "root", // Cambia según tu configuración
-    password: "", // Contraseña de la base de datos
-    database: "growtop_db", // Nombre de tu base de datos
-    synchronize: true, // Cambia a false en producción
-  }),
+  adapter: CustomAdapter(), // Usamos el adaptador personalizado aquí
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/signin",
