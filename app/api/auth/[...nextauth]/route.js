@@ -9,13 +9,13 @@ const authOptions = {
   providers: [
     EmailProvider({
       server: {
-        host: process.env.EMAIL_SERVER,
-        port: 587,
+        host: process.env.EMAIL_SERVER, // smtp.postmarkapp.com
+        port: 25, // O prueba con 25
         auth: {
-          user: process.env.EMAIL_FROM,
-          pass: process.env.POSTMARK_API_KEY,
+          user: process.env.EMAIL_FROM, // app@growtop.pe
+          pass: process.env.POSTMARK_API_KEY, // POSTMARK_API_TEST o tu API Key real
         },
-      },
+      },      
       from: process.env.EMAIL_FROM,
     }),
   ],
